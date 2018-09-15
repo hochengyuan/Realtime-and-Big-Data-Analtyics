@@ -1,0 +1,114 @@
+--Taxi Analysis--
+
+a) TAXI Rides per Month
+beeline> create table taxi_month as select month(pickup_datetime) as Month, count(month(pickup_datetime)) as Count from Taxi where month(pickup_datetime) >=4 and month(pickup_datetime) <=9 group by month(pickup_datetime) sort by count desc;
+beeline> select * from taxi_month;
+
+
+see: '/ScreenShot/taxi_month.PNG'
++-------------------+-------------------+--+
+| taxi_month.month  | taxi_month.count  |
++-------------------+-------------------+--+
+| 5                 | 14774041          |
+| 4                 | 14618759          |
+| 6                 | 13813029          |
+| 9                 | 13374016          |
+| 7                 | 13106365          |
+| 8                 | 12688877          |
++-------------------+-------------------+--+
+
+b) TAXI Rides per Month (Mean , Standard Deviation)
+beeline> select avg(count) as Mean, stddev_samp(count) as STD_DEV from taxi_month;
+
+see: '/ScreenShot/taxi_month_stddev_mean.PNG'
++-----------------------+--------------------+--+
+|         mean          |      std_dev       |
++-----------------------+--------------------+--+
+| 13729181.1666666667   | 835031.2909448163  |
++-----------------------+--------------------+--+
+
+
+c) Taxi Rides per Hour
+beeline> create table taxi_hour as select hour(pickup_datetime) as Hour, count(hour(pickup_datetime)) as Count from Taxi where month(pickup_datetime) >=4 and month(pickup_datetime) <=9 group by hour(pickup_datetime) sort by count desc;
+beeline> select * from taxi_hour;
+
+see: '/ScreenShot/taxi_hour.PNG'
++-----------------+------------------+--+
+| taxi_hour.hour  | taxi_hour.count  |
++-----------------+------------------+--+
+| 19              | 5139135          |
+| 18              | 4885893          |
+| 20              | 4877923          |
+| 21              | 4845480          |
+| 22              | 4711132          |
+| 23              | 4235047          |
+| 14              | 4095164          |
+| 12              | 3991716          |
+| 17              | 3985581          |
+| 13              | 3956227          |
+| 15              | 3845454          |
+| 11              | 3830696          |
+| 9               | 3807368          |
+| 10              | 3702117          |
+| 8               | 3691648          |
+| 0               | 3322460          |
+| 16              | 3270396          |
+| 7               | 3036031          |
+| 1               | 2420001          |
+| 6               | 1826698          |
+| 2               | 1790826          |
+| 3               | 1282410          |
+| 4               | 958572           |
+| 5               | 867112           |
++-----------------+------------------+--+
+
+
+d) beeline> select avg(count) as Mean, stddev_samp(count) as STD_DEV from taxi_hour;
+
+see: '/ScreenShot/taxi_hour_stddev_mean.PNG'
++---------------------+--------------------+--+
+|        mean         |      std_dev       |
++---------------------+--------------------+--+
+| 3432295.2916666665  | 1270912.748651979  |
++---------------------+--------------------+--+
+
+
+e) Taxi vs. Weather Condition
+//mapping weather and uber together//
+beeline> create table Taxi_Weather as 
+select taxi.pickup_datetime as DateTime, weather.temperature , weather.condition from taxi 
+inner join weather on (year(taxi.pickup_datetime) = year(weather.DATE_TIME) and
+month(taxi.pickup_datetime) = month(weather.DATE_TIME) and
+day(taxi.pickup_datetime) = day(weather.DATE_TIME) and
+hour(taxi.pickup_datetime) = hour(weather.DATE_TIME));
+
+
+beeline> select condition as weather_condition , count(condition) as count from taxi_weather group by condition sort by count desc;
+
+see: '/ScreenShot/taxi_condition_count.PNG'
++--------------------+-----------+--+
+| weather_condition  |   count   |
++--------------------+-----------+--+
+| Clear              | 86077294  |
+| Overcast           | 43968102  |
+| Mostly Cloudy      | 21161340  |
+| Light Rain         | 14853332  |
+| Partly Cloudy      | 11629956  |
+| Scattered Clouds   | 10434858  |
+| Rain               | 5491188   |
+| Heavy Rain         | 4316672   |
+| Haze               | 4059788   |
+| Unknown            | 1719996   |
+| Light Snow         | 434262    |
+| Fog                | 102052    |
++--------------------+-----------+--+
+
+f) UBER vs Temperature
+beeline> select histogram_numeric(temperature,8) as taxi_temperature from taxi_weather ;
+
+see: 'taxi_temperature_histogram.PNG'
++----------------------------------------------------+--+
+|                  taxi_temperature                  |
++----------------------------------------------------+--+
+| [{"x":35.48579360462886,"y":1080492.0},{"x":42.63926537608379,"y":8459604.0},{"x":49.483685464585506,"y":1.5984647E7},{"x":58.011851731110184,"y":2.6596825E7},{"x":64.15869632636597,"y":3.8144095E7},{"x":71.48349508635303,"y":7.0371962E7},{"x":78.29376451079642,"y":3.151143E7},{"x":84.49413006214546,"y":1.2099785E7}] |
++----------------------------------------------------+--+

@@ -1,0 +1,21 @@
+//Step 8. Number of lines: 1079891
+scala> alldata.count()
+res1: Long = 1079891
+
+
+//Step 11. Number of lines in the file: 7097
+scala> val oneLog = sc.textFile("/user/cloudera/weblogs/2014-03-15.log")
+oneLog: org.apache.spark.rdd.RDD[String] = /user/cloudera/weblogs/2014-03-15.log MapPartitionsRDD[7] at textFile at <console>:27
+
+scala> oneLog.count()
+res9: Long = 7097
+
+
+//Step 12. Spark command executed to display one line of data from the RDD:
+scala> oneLog.take(1)
+res13: Array[String] = Array(234.206.18.239 - 8495 [15/Mar/2014:23:59:30 +0100] "GET /KBDOC-00082.html HTTP/1.0" 200 9054 "http://www.loudacre.com"  "Loudacre Mobile Browser Titanic 2200")
+
+
+//Step 14. Number of lines in the RDD: 64978
+scala> jpglines.count()
+res7: Long = 64978

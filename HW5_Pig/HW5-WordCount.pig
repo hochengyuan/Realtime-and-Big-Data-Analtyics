@@ -1,0 +1,10 @@
+﻿Tweets = LOAD 'input_sample.txt' AS Lines;
+KeyString = LOAD 'keyString.txt' AS string;
+CrossParse = CROSS Tweets, KeyString;
+ParseResult = FILTER CrossParse BY INDEXOF(LOWER(Lines), LOWER(string), 0)!= -1;
+GroupedParsedResult = GROUP ParseResult BY string;
+NonNullResult = FOREACH GroupedParsedResult GENERATE $0 AS string, COUNT($1) AS count;
+Join_Result = JOIN NonNullResult BY string FULL OUTER, KeyString BY string;
+Temp_result = FOREACH Join_Result GENERATE $2 AS string, (count is null?0:count);
+OutputCount = ORDER Temp_result BY string;
+STORE OutputCount INTO 'OutputResult' USING PigStorage(' ');

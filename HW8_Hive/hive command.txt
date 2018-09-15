@@ -1,0 +1,20 @@
+// Initialization
+$ hdfs dfs -mkdir hiveInput
+$ hdfs dfs -put [local file of housing sales price and AirBnB deal] hiveInput
+$ beeline -u jdbc:hive2://quickstart:10000/default -n cloudera -d org.apache.hive.jdbc.HiveDriver
+
+// load dataset to table schema 
+
+CREATE EXTERNAL TABLE AirBnB(room_id int , host_id int , room_type string , borough string , reviews int , overall_satisfaction float
+ , accommodates int , bedrooms int , price int , minstay int ,latitude float , longtitude float , last_modified string)
+row format delimited fields terminated by ',' 
+location '/user/cloudera/hiveInput/';
+
+
+CREATE EXTERNAL TABLE HousingSales(BOROUGH int , NEIGHBORHOOD int , BUILDING_CLASS_CATEGORY string , 
+TAX_CLASS_AT_PRESENT int , BLOCK int , LOT int , EASE_MENT string , BUILDING_CLASS_AT_PRESENT string , 
+ADDRESS string , APARTMENT_NUMBER string , ZIP_CODE int , RESIDENTIAL_UNITS int , COMMERCIAL_UNITS int ,
+TOTAL_UNITS int , LAND_SQUARE_FEET int , GROSS_SQUARE_FEET int , YEAR_BUILT int , TAX_CLASS_AT_TIME_OF_SALE int ,
+BUILDING_CLASS_AT_TIME_OF_SALE string , SALE_PRICE int , SALE_DATE date)
+row format delimited fields terminated by ','
+location '/user/cloudera/hiveInput/';

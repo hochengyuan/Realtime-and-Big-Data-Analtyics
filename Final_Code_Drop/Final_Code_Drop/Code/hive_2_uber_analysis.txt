@@ -1,0 +1,114 @@
+--Uber Analysis--
+
+a) UBER Rides per Month
+beeline> create table uber_month as select month(date_time) as Month, count(month(date_time)) as Count from uber group by month(date_time) sort by count desc;
+beeline> select * from uber_month;
+
+see: '/ScreenShot/uber_month.PNG'
++--------+----------+--+
+| month  |  count   |
++--------+----------+--+
+| 4      | 5098843  |
+| 9      | 1028136  |
+| 8      | 829275   |
+| 7      | 796121   |
+| 6      | 663844   |
+| 5      | 652435   |
+| NULL   | 0        |
++--------+----------+--+
+
+b) Uber Rides per Month (Mean , Standard Deviation)
+beeline> select avg(count) as Mean, stddev_samp(count) as STD_DEV from uber_month;
+
+see: '/ScreenShot/uber_month_stddev_mean.PNG'
++------------+--------------------+--+
+|    mean    |      std_dev       |
++------------+--------------------+--+
+| 1295522.0  | 1707556.185682919  |
++------------+--------------------+--+
+
+
+c) UBER Rides per Hour
+beeline> create table uber_hour as select hour(date_time) as Hour, count(hour(date_time)) as Count from uber group by hour(date_time) sort by count desc;
+beeline> select * from uber_hour;
+
+see: '/ScreenShot/uber_hour.PNG'
++-------+----------+--+
+| hour  |  count   |
++-------+----------+--+
+| 23    | 4703517  |
+| 17    | 336190   |
+| 18    | 324679   |
+| 16    | 313400   |
+| 19    | 294513   |
+| 20    | 284604   |
+| 21    | 281460   |
+| 15    | 275466   |
+| 22    | 241858   |
+| 14    | 230625   |
+| 13    | 195877   |
+| 7     | 193094   |
+| 8     | 190504   |
+| 12    | 170452   |
+| 11    | 165703   |
+| 9     | 159967   |
+| 10    | 159148   |
+| 6     | 143213   |
+| 0     | 103836   |
+| 5     | 83939    |
+| 1     | 67227    |
+| 4     | 55230    |
+| 3     | 48287    |
+| 2     | 45865    |
+| NULL  | 0        |
++-------+----------+--+
+
+d) UBER Rides per Hour (Mean , Standard Deviation)
+beeline> select avg(count) as Mean, stddev_samp(count) as STD_DEV from uber_hour;
+
+see: '/ScreenShot/uber_hour_stddev_mean.PNG'
++------------+-------------------+--+
+|    mean    |      std_dev      |
++------------+-------------------+--+
+| 362746.16  | 909540.880279426  |
++------------+-------------------+--+
+
+e) UBER vs Weather Condition
+//mapping weather and uber together//
+beeline> create table Uber_Weather as 
+select uber.DATE_TIME , weather.temperature , weather.condition from uber 
+inner join weather on (year(uber.Date_Time) = year(weather.DATE_TIME) and
+month(uber.DATE_TIME) = month(weather.DATE_TIME) and
+day(uber.DATE_TIME) = day(weather.DATE_TIME) and
+hour(uber.DATE_TIME) = hour(weather.DATE_TIME));
+
+//count the condition//
+beeline> select condition as weather_condition , count(condition) as count from uber_weather group by condition sort by count desc;
+
+see: '/ScreenShot/uber_condition_count.PNG'
++--------------------+-----------+--+
+| weather_condition  |   count   |
++--------------------+-----------+--+
+| Heavy Rain         | 18453802  |
+| Rain               | 9438232   |
+| Clear              | 4492004   |
+| Overcast           | 2481666   |
+| Mostly Cloudy      | 1232854   |
+| Light Rain         | 947512    |
+| Partly Cloudy      | 679642    |
+| Scattered Clouds   | 591626    |
+| Haze               | 238254    |
+| Unknown            | 105230    |
+| Light Snow         | 9952      |
+| Fog                | 5222      |
++--------------------+-----------+--+
+
+f) UBER vs. Temperature
+beeline> select histogram_numeric(temperature,8) as uber_temperature from uber_weather ;
+
+see: '/ScreenShot/uber_temperature_histogram'
++----------------------------------------------------+--+
+|                  uber_temperature                  |
++----------------------------------------------------+--+
+| [{"x":35.700333836726756,"y":42535.0},{"x":44.55970872724606,"y":660117.0},{"x":50.017919927727846,"y":2.7610898E7},{"x":58.825839331744824,"y":1564354.0},{"x":64.77247077190621,"y":1868344.0},{"x":72.54525794750795,"y":5112286.0},{"x":81.28970440863436,"y":1659508.0},{"x":88.10386371635431,"y":157954.0}] |
++----------------------------------------------------+--+

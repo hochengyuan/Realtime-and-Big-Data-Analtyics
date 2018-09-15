@@ -1,0 +1,32 @@
+--INITIALIZATION--
+$ beeline -u jdbc:hive2://quickstart:10000/default -n cloudera -d org.apache.hive.jdbc.HiveDriver
+beeline> !connect jdbc:hive2://babar.es.its.nyu.edu:10000/
+beeline> create database cyh359;
+beeline> use cyh359;
+
+//CREATE SCHEMA FOR THE FOLLOWING THREE TABLES
+
+1) WEATHER 
+beeline> CREATE EXTERNAL TABLE Weather(DATE_TIME timestamp , TEMPERATURE float , CONDITION string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' ;
+beeline> load data inpath '/user/cyh359/RBDA_Project/NEW_Weather_Apr_Sep.csv' into TABLE Weather;
+
+see: '/ScreenShot/describe weather.PNG'
+
+
+2) UBER
+beeline> CREATE EXTERNAL TABLE UBER(DATE_TIME timestamp , LATITUDE float, LONGTITUDE float , BASE string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' ;
+beeline> load data inpath '/user/cyh359/RBDA_Project/New_UberRide.csv' into TABLE UBER;
+
+see: '/ScreenShot/describe uber.PNG'
+
+3) TAXI
+beeline> CREATE EXTERNAL TABLE Taxi(VendorID string , Pickup_Datetime string , Dropoff_Datetime timestamp , 
+Passenger_Count int , Trip_Distance float , Pickup_Longtitude float , Pickup_Latitude float , Rate_Code string , 
+Store_and_Fwd_Flag string , Dropoff_Longtitude float , Dropoff_Laitude float, Payment_Type string , Fare_Amount float ,
+Surcharge float , MTA_Tax float , Tip_Amount float , Tolls_Amount float , Total_Amount float)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+location '/user/cyh359/RBDA_Project/Taxi';
+
+see: '/ScreenShot/describe taxi.PNG'

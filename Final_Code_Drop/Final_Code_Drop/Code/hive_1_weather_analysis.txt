@@ -1,0 +1,31 @@
+--Weather Analysis--
+a) Weather Condition Summary
+beeline> select condition , count( condition) as Count from weather group by condition sort by count desc;
+
+see '/ScreenShot/weather condition summary.PNG'
++-------------------+--------+--+
+|     condition     | count  |
++-------------------+--------+--+
+| Clear             | 4720   |
+| Overcast          | 2362   |
+| Mostly Cloudy     | 1134   |
+| Light Rain        | 730    |
+| Partly Cloudy     | 598    |
+| Scattered Clouds  | 524    |
+| Rain              | 266    |
+| Haze              | 194    |
+| Heavy Rain        | 182    |
+| Unknown           | 102    |
+| Light Snow        | 22     |
+| Fog               | 6      |
++-------------------+--------+--+
+
+b) Weather Temperature Histogram
+beeline> select histogram_numeric(TEMPERATURE,8) as temperature from weather ;
+
+see '/ScreenShot/weather_temperature_histogram.PNG'
++----------------------------------------------------+--+
+|                    temperature                     |
++----------------------------------------------------+--+
+| [{"x":35.094594182194896,"y":74.0},{"x":43.601277860208825,"y":626.0},{"x":50.55079849535671,"y":626.0},{"x":59.375902413461205,"y":2216.0},{"x":66.92793539564602,"y":2470.0},{"x":72.87443870030428,"y":3028.0},{"x":80.70819088325014,"y":1758.0},{"x":86.97619047619044,"y":42.0}] |
++----------------------------------------------------+--+
