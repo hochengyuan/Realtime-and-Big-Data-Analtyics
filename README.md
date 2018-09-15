@@ -1,2 +1,2 @@
 # BigDataTool
-Hive, NoSQL, Pig
+Hive, NoSQL, Pig, Scala, MapReduce
